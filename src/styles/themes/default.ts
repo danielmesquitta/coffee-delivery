@@ -1,10 +1,10 @@
 export const defaultTheme = {
-  family: {
+  families: {
     roboto: "'Roboto', sans-serif",
     baloo: "'Baloo 2', cursive",
   },
 
-  color: {
+  colors: {
     white: '#FFF',
 
     'gray-100': '#FAFAFA',
