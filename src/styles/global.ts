@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     background: ${({ theme }) => theme.colors['gray-100']};
-    color: ${({ theme }) => theme.colors['gray-900']};
+    color: ${({ theme }) => theme.colors['gray-800']};
     --webkit-font-smoothing: antialiased;
   }
 
@@ -26,11 +26,12 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${({ theme }) => theme.families.roboto};
     font-weight: 400;
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.3;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: ${({ theme }) => theme.families.baloo};
+    color: ${({ theme }) => theme.colors['gray-900']};
     font-weight: 700;
     line-height: 1.3;
   }
