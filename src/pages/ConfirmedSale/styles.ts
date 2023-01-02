@@ -70,7 +70,7 @@ export const DetailContent = styled.div`
 
   strong {
     color: ${({ theme }) => theme.colors['gray-700']};
-    font-family: ${({ theme }) => theme.fonts.text};
+    font-family: ${({ theme }) => theme.fonts.default};
     font-weight: 700;
   }
 `;

@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export const GlobalStyle = createGlobalStyle`
   :focus {
     outline: 0;
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors['primary-500']};
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors['secondary-500']};
   }
 
   * {
@@ -23,14 +23,14 @@ export const GlobalStyle = createGlobalStyle`
   input,
   textarea,
   button {
-    font-family: ${({ theme }) => theme.fonts.text};
+    font-family: ${({ theme }) => theme.fonts.default};
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.3;
   }
 
   h1, h2, h3, h4, h5, h6, strong {
-    font-family: ${({ theme }) => theme.fonts.header};
+    font-family: ${({ theme }) => theme.fonts.heading};
     color: ${({ theme }) => theme.colors['gray-900']};
     font-weight: 700;
     line-height: 1.3;
@@ -58,5 +58,9 @@ export const GlobalStyle = createGlobalStyle`
 
   input[type=number] {
     -moz-appearance: textfield;
+  }
+
+  ul {
+    list-style-type: none;
   }
 `;

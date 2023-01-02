@@ -1,4 +1,5 @@
-import { Add, Cart, Remove } from 'react-ionicons';
+import { Cart } from 'react-ionicons';
+import { AmountController } from '../../../../components/AmountController';
 import { defaultTheme } from '../../../../styles/themes/default';
 import { coffees } from './data';
 import {
@@ -8,7 +9,6 @@ import {
   CardHeader,
   CardTags,
   CoffeeListContainer,
-  Controller,
 } from './styles';
 
 const { colors } = defaultTheme;
@@ -42,15 +42,7 @@ export const CoffeeList = () => {
                 <small>R$</small> {price}
               </p>
 
-              <Controller>
-                <button>
-                  <Remove width="0.875rem" color={colors['secondary-500']} />
-                </button>
-                <input type="number" placeholder="0" />
-                <button>
-                  <Add width="0.875rem" color={colors['secondary-500']} />
-                </button>
-              </Controller>
+              <AmountController />
 
               <button>
                 <Cart width="1.375rem" color={colors['gray-200']} />

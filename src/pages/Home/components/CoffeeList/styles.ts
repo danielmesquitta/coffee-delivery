@@ -78,13 +78,14 @@ export const CardFooter = styled.footer`
   > p {
     display: flex;
     font-size: 1.5rem;
-    font-family: ${({ theme }) => theme.fonts.header};
+    font-family: ${({ theme }) => theme.fonts.heading};
     font-weight: 800;
     align-items: baseline;
     gap: 0.25rem;
+    margin-right: auto;
 
     > small {
-      font-family: ${({ theme }) => theme.fonts.text};
+      font-family: ${({ theme }) => theme.fonts.default};
       font-size: 0.875rem;
       font-weight: 400;
     }
@@ -99,45 +100,6 @@ export const CardFooter = styled.footer`
     border: none;
     background-color: ${({ theme }) => theme.colors['secondary-700']};
     border-radius: 6px;
-  }
-`;
-
-export const Controller = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.colors['gray-400']};
-  border-radius: 6px;
-  margin: 0 0.5rem 0 auto;
-  height: 2.375rem;
-
-  &:focus-within {
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors['secondary-500']};
-  }
-
-  > input {
-    width: 1.5rem;
-    text-align: center;
-    border: none;
-    background-color: transparent;
-    color: ${({ theme }) => theme.colors['gray-900']};
-
-    &:focus {
-      box-shadow: none;
-    }
-
-    &::placeholder {
-      color: ${({ theme }) => theme.colors['gray-900']};
-      opacity: 1;
-    }
-  }
-
-  > button {
-    background-color: transparent;
-    width: 1.4rem;
-    border: none;
-    border-radius: 6px;
-
-    &:focus {
-      box-shadow: 0 0 0 2px ${({ theme }) => theme.colors['secondary-500']};
-    }
+    margin-left: 0.5rem;
   }
 `;

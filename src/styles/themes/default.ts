@@ -1,7 +1,7 @@
 export const defaultTheme = {
   fonts: {
-    text: "'Roboto', sans-serif",
-    header: "'Baloo 2', cursive",
+    default: "'Roboto', sans-serif",
+    heading: "'Baloo 2', cursive",
   },
 
   colors: {

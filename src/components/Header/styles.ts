@@ -10,11 +10,6 @@ export const HeaderContainer = styled.header`
     padding: 1rem;
     margin-left: -1rem;
 
-    &:focus {
-      box-shadow: 0px 0px 0px 2px
-        ${({ theme }) => theme.colors['secondary-500']};
-    }
-
     > img {
       height: 2.5rem;
     }
@@ -36,11 +31,6 @@ export const HeaderContainer = styled.header`
       border-radius: 6px;
       padding: 0 0.5rem;
       gap: 0.25rem;
-
-      &:focus {
-        box-shadow: 0px 0px 0px 2px
-          ${({ theme }) => theme.colors['secondary-500']};
-      }
     }
 
     > a:last-child {
@@ -52,6 +42,11 @@ export const HeaderContainer = styled.header`
       display: flex;
       align-items: center;
       justify-content: center;
+
+      &:focus {
+        box-shadow: 0px 0px 0px 2px
+          ${({ theme }) => theme.colors['primary-500']};
+      }
 
       > span {
         position: absolute;
