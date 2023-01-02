@@ -1,8 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { TrashOutline } from 'react-ionicons';
+import * as zod from 'zod';
 import { AmountController } from '../../../../components/AmountController';
 import { Icon } from '../../../../components/Icon';
+import { useProductsContext } from '../../../../contexts/products';
 import { defaultTheme } from '../../../../styles/themes/default';
-import { coffees } from '../../../Home/components/CoffeeList/data';
 import {
   Controllers,
   Detail,
@@ -13,49 +17,83 @@ import {
 
 const { colors } = defaultTheme;
 
-const selectedCoffees = coffees.slice(0, 3);
+const productsFormValidationSchema = zod.object({
+  products: zod.array(
+    zod.object({ id: zod.number().min(1), amount: zod.number().min(0) }),
+  ),
+});
 
-export const DetailsForm = () => (
-  <DetailsFormContainer>
-    <Details>
-      {selectedCoffees.map(({ id, imageSrc, title, price }) => (
-        <Detail key={id}>
-          <img src={imageSrc} alt={`Xícara de ${title}`} />
+type ProductsFormData = zod.infer<typeof productsFormValidationSchema>;
 
-          <div>
-            <h3>
-              <span>{title}</span>
+export const DetailsForm = () => {
+  const { selectedProducts, removeProduct, totalPrice } = useProductsContext();
 
-              <strong>R$ {price}</strong>
-            </h3>
+  const productsForm = useForm<ProductsFormData>({
+    resolver: zodResolver(productsFormValidationSchema),
+    defaultValues: {
+      products: selectedProducts.map(({ id, amount }) => ({ id, amount })),
+    },
+  });
 
-            <Controllers>
-              <AmountController />
+  const handleRemoveProduct = useCallback(
+    (productId: number) => {
+      removeProduct(productId);
+    },
+    [removeProduct],
+  );
 
-              <button>
-                <Icon icon={TrashOutline} color={colors['secondary-500']} />
-                Remover
-              </button>
-            </Controllers>
-          </div>
-        </Detail>
-      ))}
-    </Details>
+  return (
+    <DetailsFormContainer>
+      <Details>
+        <FormProvider {...productsForm}>
+          {selectedProducts.map(
+            ({ id, imageSrc, title, totalPrice }, index) => (
+              <Detail key={id}>
+                <img src={imageSrc} alt={`Xícara de ${title}`} />
 
-    <DetailsFooter>
-      <p>
-        <span>Total de itens</span> <span>R$ 29,70</span>
-      </p>
+                <div>
+                  <h3>
+                    <span>{title}</span>
 
-      <p>
-        <span>Entrega</span> <span>R$ 3,50</span>
-      </p>
+                    <strong>R$ {totalPrice}</strong>
+                  </h3>
 
-      <p>
-        <strong>Total</strong> <strong>R$ 33,20</strong>
-      </p>
+                  <Controllers>
+                    <AmountController productId={id} index={index} />
 
-      <button>Confirmar pedido</button>
-    </DetailsFooter>
-  </DetailsFormContainer>
-);
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveProduct(id)}
+                    >
+                      <Icon
+                        icon={TrashOutline}
+                        color={colors['secondary-500']}
+                      />
+                      Remover
+                    </button>
+                  </Controllers>
+                </div>
+              </Detail>
+            ),
+          )}
+        </FormProvider>
+      </Details>
+
+      <DetailsFooter>
+        <p>
+          <span>Total de itens</span> <span>R$ {totalPrice}</span>
+        </p>
+
+        <p>
+          <span>Entrega</span> <span>R$ 3,50</span>
+        </p>
+
+        <p>
+          <strong>Total</strong> <strong>R$ {totalPrice}</strong>
+        </p>
+
+        <button>Confirmar pedido</button>
+      </DetailsFooter>
+    </DetailsFormContainer>
+  );
+};

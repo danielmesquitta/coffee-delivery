@@ -1,5 +1,6 @@
 import { Cart, Location } from 'react-ionicons';
 import { NavLink } from 'react-router-dom';
+import { useProductsContext } from '../../contexts/products';
 import { defaultTheme } from '../../styles/themes/default';
 import { Icon } from '../Icon';
 import { HeaderContainer } from './styles';
@@ -7,6 +8,8 @@ import { HeaderContainer } from './styles';
 const { colors } = defaultTheme;
 
 export const Header = () => {
+  const { selectedProducts } = useProductsContext();
+
   return (
     <HeaderContainer>
       <NavLink to="/">
@@ -22,7 +25,7 @@ export const Header = () => {
         <NavLink to="/check-in">
           <Icon icon={Cart} size={22} color={colors['primary-700']} />
 
-          <span>3</span>
+          <span>{selectedProducts.length}</span>
         </NavLink>
       </nav>
     </HeaderContainer>

@@ -1,6 +1,6 @@
 const generateRandomPrice = () => Number((5 + Math.random() * 15).toFixed(2));
 
-export const coffees = [
+export const products = [
   {
     id: 1,
     title: 'Expresso Tradicional',

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const DetailsFormContainer = styled.div`
+export const DetailsFormContainer = styled.form`
   padding: 2.5rem;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.colors['gray-200']};
