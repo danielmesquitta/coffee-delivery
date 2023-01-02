@@ -39,17 +39,6 @@ export const ContentFeatures = styled.div`
     gap: 0.75rem;
     color: ${({ theme }) => theme.colors['gray-700']};
 
-    > span[color] {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 999px;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
-    }
-
     &:nth-child(1) > span[color] {
       background-color: ${({ theme }) => theme.colors['primary-700']};
     }

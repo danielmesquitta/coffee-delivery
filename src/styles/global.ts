@@ -23,14 +23,14 @@ export const GlobalStyle = createGlobalStyle`
   input,
   textarea,
   button {
-    font-family: ${({ theme }) => theme.families.roboto};
+    font-family: ${({ theme }) => theme.fonts.text};
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.3;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: ${({ theme }) => theme.families.baloo};
+  h1, h2, h3, h4, h5, h6, strong {
+    font-family: ${({ theme }) => theme.fonts.header};
     color: ${({ theme }) => theme.colors['gray-900']};
     font-weight: 700;
     line-height: 1.3;
@@ -44,5 +44,19 @@ export const GlobalStyle = createGlobalStyle`
 
   button {
     cursor: pointer;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 `;

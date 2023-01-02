@@ -1,4 +1,5 @@
-import { Cafe, Cart, Cube, Time } from 'react-ionicons';
+import { Cafe, Cart, Cube } from 'react-ionicons';
+import { Icon } from '../../../../components/Icon';
 import { defaultTheme } from '../../../../styles/themes/default';
 import { Content, ContentFeatures, FeaturesContainer } from './styles';
 
@@ -17,22 +18,35 @@ export const Features = () => {
 
         <ContentFeatures>
           <p>
-            <Cart color={colors.white} />
+            <Icon
+              icon={Cart}
+              size={16}
+              backgroundColor={colors['primary-700']}
+            />
             Compra simples e segura
           </p>
 
           <p>
-            <Cube color={colors.white} />
+            <Icon icon={Cube} size={16} backgroundColor={colors['gray-700']} />
             Embalagem mantém o café intacto
           </p>
 
           <p>
-            <Time color={colors.white} />
+            <Icon
+              icon={Cube}
+              size={16}
+              backgroundColor={colors['primary-500']}
+            />
             Entrega rápida e rastreada
           </p>
 
           <p>
-            <Cafe color={colors.white} />O café chega fresquinho até você
+            <Icon
+              icon={Cafe}
+              size={16}
+              backgroundColor={colors['secondary-500']}
+            />
+            O café chega fresquinho até você
           </p>
         </ContentFeatures>
       </Content>

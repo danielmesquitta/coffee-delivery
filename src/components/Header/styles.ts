@@ -4,18 +4,28 @@ export const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem 0;
+  padding: 1rem 0;
 
-  > img {
-    height: 2.5rem;
+  > a {
+    padding: 1rem;
+    margin-left: -1rem;
+
+    &:focus {
+      box-shadow: 0px 0px 0px 2px
+        ${({ theme }) => theme.colors['secondary-500']};
+    }
+
+    > img {
+      height: 2.5rem;
+    }
   }
 
-  > div {
+  > nav {
     display: flex;
     align-items: center;
     gap: 0.75rem;
 
-    > span {
+    > a:first-child {
       height: 2.375rem;
       display: flex;
       align-items: center;
@@ -26,9 +36,15 @@ export const HeaderContainer = styled.header`
       border-radius: 6px;
       padding: 0 0.5rem;
       gap: 0.25rem;
+
+      &:focus {
+        box-shadow: 0px 0px 0px 2px
+          ${({ theme }) => theme.colors['secondary-500']};
+      }
     }
 
-    > a {
+    > a:last-child {
+      position: relative;
       background-color: ${({ theme }) => theme.colors['primary-300']};
       border-radius: 6px;
       width: 2.375rem;
@@ -36,6 +52,21 @@ export const HeaderContainer = styled.header`
       display: flex;
       align-items: center;
       justify-content: center;
+
+      > span {
+        position: absolute;
+        font-size: 0.75rem;
+        top: -0.5rem;
+        right: -0.5rem;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: ${({ theme }) => theme.colors['primary-700']};
+        color: ${({ theme }) => theme.colors['white']};
+      }
     }
   }
 `;
