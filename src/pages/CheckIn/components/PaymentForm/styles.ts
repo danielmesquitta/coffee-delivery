@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import type { PaymentOptionProps } from './types';
 
-export const PaymentFormContainer = styled.div`
+export const PaymentFormContainer = styled.form`
   padding: 2.5rem;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.colors['gray-200']};
@@ -24,7 +25,7 @@ export const PaymentOptions = styled.div`
   gap: 0.75rem;
 `;
 
-export const PaymentOption = styled.button`
+export const PaymentOption = styled.label<PaymentOptionProps>`
   position: relative;
   border-radius: 6px;
   background: ${({ theme }) => theme.colors['gray-400']};
@@ -42,6 +43,14 @@ export const PaymentOption = styled.button`
   & * {
     cursor: pointer;
   }
+
+  ${({ isActive }) =>
+    isActive
+      ? css`
+          background: ${({ theme }) => theme.colors['secondary-300']};
+          border-color: ${({ theme }) => theme.colors['secondary-500']};
+        `
+      : ''}
 
   &:hover {
     background: ${({ theme }) => theme.colors['secondary-300']};

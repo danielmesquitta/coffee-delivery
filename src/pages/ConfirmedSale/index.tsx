@@ -1,6 +1,6 @@
 import { Card, Cash, Location, Time } from 'react-ionicons';
-import { Icon } from '../../components/Icon';
-import { defaultTheme } from '../../styles/themes/default';
+import { Icon } from '~/components/Icon';
+import { defaultTheme } from '~/styles/themes/default';
 import {
   ConfirmedSaleContainer,
   Detail,

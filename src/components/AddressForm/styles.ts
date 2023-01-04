@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AddressFormContainer = styled.div`
+export const AddressFormContainer = styled.form`
   padding: 2.5rem;
   border-radius: 6px;
   background-color: ${({ theme }) => theme.colors['gray-200']};
@@ -60,6 +60,29 @@ export const AddressFormGrid = styled.div`
 
     &:nth-child(7) {
       grid-column: span 1;
+    }
+  }
+`;
+
+export const AddressFormFooter = styled.footer`
+  padding-top: 2rem;
+
+  button {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    border-radius: 6px;
+    height: 2.875rem;
+    padding: 0 1rem;
+    border: 0;
+    background: ${({ theme }) => theme.colors['primary-500']};
+    color: ${({ theme }) => theme.colors['white']};
+    font-size: 0.875rem;
+
+    &:focus {
+      box-shadow: 0 0 0 1px ${({ theme }) => theme.colors['primary-500']};
     }
   }
 `;

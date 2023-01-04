@@ -9,7 +9,7 @@ export const CheckInContainer = styled.div`
 export const CheckInSection = styled.section`
   width: 100%;
 
-  > div + div {
+  > form + form {
     margin-top: 0.75rem;
   }
 

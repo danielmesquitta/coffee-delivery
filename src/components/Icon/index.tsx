@@ -1,6 +1,6 @@
 import { defaultTheme } from '../../styles/themes/default';
 import { IconContainer } from './styles';
-import { IconProps } from './types';
+import type { IconProps } from './types';
 
 const { colors } = defaultTheme;
 

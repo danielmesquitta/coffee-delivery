@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Add, Remove } from 'react-ionicons';
-import { useProductsContext } from '../../contexts/products';
-import { defaultTheme } from '../../styles/themes/default';
-import { Icon } from '../Icon';
+import { Icon } from '~/components/Icon';
+import { useCartContext } from '~/contexts/cart';
+import { defaultTheme } from '~/styles/themes/default';
 import { AmountControllerContainer } from './styles';
-import { AmountControllerProps } from './types';
+import type { AmountControllerProps } from './types';
 
 const { colors } = defaultTheme;
 
@@ -16,7 +16,7 @@ export const AmountController = ({
   productId,
   ...inputProps
 }: AmountControllerProps) => {
-  const { addProduct, subtractProduct } = useProductsContext();
+  const { addProduct, subtractProduct } = useCartContext();
 
   const { register } = useFormContext();
 

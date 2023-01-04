@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { IconContainerProps } from './types';
+import type { IconContainerProps } from './types';
 
 export const IconContainer = styled.div<IconContainerProps>`
   display: flex;

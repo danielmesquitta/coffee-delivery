@@ -24,6 +24,6 @@ export interface AmountControllerProps extends InputProps {
   subtractButtonProps?: ButtonProps;
 }
 
-export interface Products {
+export interface Cart {
   amount: number;
 }

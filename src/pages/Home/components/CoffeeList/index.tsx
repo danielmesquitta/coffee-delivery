@@ -4,18 +4,19 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Cart } from 'react-ionicons';
 import { useNavigate } from 'react-router-dom';
 import * as zod from 'zod';
-import { AmountController } from '../../../../components/AmountController';
-import { Icon } from '../../../../components/Icon';
-import { useProductsContext } from '../../../../contexts/products';
-import { products } from '../../../../contexts/products/data';
-import { defaultTheme } from '../../../../styles/themes/default';
+import { AmountController } from '~/components/AmountController';
+import { Icon } from '~/components/Icon';
+import { useCartContext } from '~/contexts/cart';
+import { formatNumberToCurrency } from '~/helpers/formatNumberToCurrency';
+import { products } from '~/reducers/cart/data';
+import { defaultTheme } from '~/styles/themes/default';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTags,
-  CoffeeListContainer,
+  CoffeeListContainer
 } from './styles';
 
 const { colors } = defaultTheme;
@@ -26,20 +27,18 @@ const productsFormValidationSchema = zod.object({
   ),
 });
 
-type ProductsFormData = zod.infer<typeof productsFormValidationSchema>;
+type CartFormData = zod.infer<typeof productsFormValidationSchema>;
 
 export const CoffeeList = () => {
-  const { selectedProducts } = useProductsContext();
+  const { cart } = useCartContext();
 
   const navigate = useNavigate();
 
-  const productsForm = useForm<ProductsFormData>({
+  const productsForm = useForm<CartFormData>({
     resolver: zodResolver(productsFormValidationSchema),
     defaultValues: {
       products: products.map(({ id }) => {
-        const selectedProduct = selectedProducts.find(
-          (product) => product.id === id,
-        );
+        const selectedProduct = cart.find((product) => product.id === id);
 
         return { id, amount: selectedProduct?.amount ?? 0 };
       }),
@@ -48,12 +47,11 @@ export const CoffeeList = () => {
 
   const { handleSubmit } = productsForm;
 
-  const handleGoToCart = useCallback(
-    (data: ProductsFormData) => {
-      navigate('/check-in');
-    },
-    [navigate],
-  );
+  const handleGoToCart = useCallback(() => {
+    if (cart.length === 0) return;
+
+    navigate('/check-in');
+  }, [navigate, cart]);
 
   return (
     <CoffeeListContainer>
@@ -83,7 +81,8 @@ export const CoffeeList = () => {
 
                   <CardFooter>
                     <p>
-                      <small>R$</small> {price}
+                      <small>R$</small>
+                      {formatNumberToCurrency(price).replace('R$', '')}
                     </p>
 
                     <AmountController productId={id} index={index} />

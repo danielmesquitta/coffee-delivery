@@ -1,35 +1,87 @@
+import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { LocationOutline } from 'react-ionicons';
-import { defaultTheme } from '../../styles/themes/default';
-import { Icon } from '../Icon';
-import { AddressFormContainer, AddressFormGrid } from './styles';
+import { Icon } from '~/components/Icon';
+import { useUserContext } from '~/contexts/user';
+import { defaultTheme } from '~/styles/themes/default';
+import {
+  AddressFormContainer,
+  AddressFormFooter,
+  AddressFormGrid,
+} from './styles';
+import type { AddressFormData, AddressFormProps } from './types';
 
 const { colors } = defaultTheme;
 
-export const AddressForm = () => (
-  <AddressFormContainer>
-    <header>
-      <Icon icon={LocationOutline} size={22} color={colors['primary-500']} />
+export const AddressForm = ({ hasSubmitButton, ...rest }: AddressFormProps) => {
+  const { register, handleSubmit } = useFormContext<AddressFormData>();
 
-      <div>
-        <strong>Endereço de entrega</strong>
-        <p>Informe o endereço onde deseja receber o pedido</p>
-      </div>
-    </header>
+  const { setAddress } = useUserContext();
 
-    <AddressFormGrid>
-      <input type="text" placeholder="CEP" />
+  const handleAddressSubmit = useCallback(
+    ({ address }: AddressFormData) => {
+      console.log({ address });
 
-      <input type="text" placeholder="Endereço" />
+      setAddress(address);
+    },
+    [setAddress],
+  );
 
-      <input type="text" placeholder="Número" />
+  return (
+    <AddressFormContainer
+      {...rest}
+      onSubmit={handleSubmit(handleAddressSubmit)}
+    >
+      <header>
+        <Icon icon={LocationOutline} size={22} color={colors['primary-500']} />
 
-      <input type="text" placeholder="Complemento" />
+        <div>
+          <strong>Endereço de entrega</strong>
+          <p>Informe o endereço onde deseja receber o pedido</p>
+        </div>
+      </header>
 
-      <input type="text" placeholder="Bairro" />
+      <AddressFormGrid>
+        <input type="text" placeholder="CEP" {...register('address.zipCode')} />
 
-      <input type="text" placeholder="Cidade" />
+        <input
+          type="text"
+          placeholder="Endereço"
+          {...register('address.street')}
+        />
 
-      <input type="text" placeholder="Estado" />
-    </AddressFormGrid>
-  </AddressFormContainer>
-);
+        <input
+          type="number"
+          placeholder="Número"
+          {...register('address.number')}
+        />
+
+        <input
+          type="text"
+          placeholder="Complemento"
+          {...register('address.complement')}
+        />
+
+        <input
+          type="text"
+          placeholder="Bairro"
+          {...register('address.neighborhood')}
+        />
+
+        <input type="text" placeholder="Cidade" {...register('address.city')} />
+
+        <input
+          type="text"
+          placeholder="Estado"
+          {...register('address.state')}
+        />
+      </AddressFormGrid>
+
+      {hasSubmitButton && (
+        <AddressFormFooter>
+          <button type="submit">Salvar endereço</button>
+        </AddressFormFooter>
+      )}
+    </AddressFormContainer>
+  );
+};

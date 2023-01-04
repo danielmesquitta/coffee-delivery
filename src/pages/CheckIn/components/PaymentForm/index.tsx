@@ -1,16 +1,22 @@
+import { useFormContext } from 'react-hook-form';
 import {
   CardOutline,
   CashOutline,
   PricetagOutline,
   WalletOutline,
 } from 'react-ionicons';
-import { Icon } from '../../../../components/Icon';
-import { defaultTheme } from '../../../../styles/themes/default';
+import { Icon } from '~/components/Icon';
+import { defaultTheme } from '~/styles/themes/default';
 import { PaymentFormContainer, PaymentOption, PaymentOptions } from './styles';
+import type { PaymentFormData } from './types';
 
 const { colors } = defaultTheme;
 
 export const PaymentForm = () => {
+  const { register, watch } = useFormContext<PaymentFormData>();
+
+  const paymentMethod = watch('paymentMethod');
+
   return (
     <PaymentFormContainer>
       <header>
@@ -29,35 +35,48 @@ export const PaymentForm = () => {
       </header>
 
       <PaymentOptions>
-        <PaymentOption>
+        <PaymentOption
+          htmlFor="credit"
+          isActive={paymentMethod === 'CREDIT_CARD'}
+        >
           <Icon icon={CardOutline} color={colors['secondary-500']} />
 
           <input
-            type="radio"
+            {...register('paymentMethod')}
             id="credit"
-            name="paymentMethod"
+            type="radio"
             value="CREDIT_CARD"
           />
-          <label htmlFor="credit">Cartão de crédito</label>
+
+          <span>Cartão de crédito</span>
         </PaymentOption>
 
-        <PaymentOption>
+        <PaymentOption
+          htmlFor="debit"
+          isActive={paymentMethod === 'DEBIT_CARD'}
+        >
           <Icon icon={WalletOutline} color={colors['secondary-500']} />
 
           <input
-            type="radio"
+            {...register('paymentMethod')}
             id="debit"
-            name="paymentMethod"
+            type="radio"
             value="DEBIT_CARD"
           />
-          <label htmlFor="debit">Cartão de debito</label>
+
+          <span>Cartão de debito</span>
         </PaymentOption>
 
-        <PaymentOption>
+        <PaymentOption htmlFor="cash" isActive={paymentMethod === 'CASH'}>
           <Icon icon={CashOutline} color={colors['secondary-500']} />
+          <input
+            {...register('paymentMethod')}
+            id="cash"
+            type="radio"
+            value="CASH"
+          />
 
-          <input type="radio" id="cash" name="paymentMethod" value="CASH" />
-          <label htmlFor="cash">Dinheiro</label>
+          <span>Dinheiro</span>
         </PaymentOption>
       </PaymentOptions>
     </PaymentFormContainer>

@@ -1,6 +1,6 @@
 import { Cafe, Cart, Cube } from 'react-ionicons';
-import { Icon } from '../../../../components/Icon';
-import { defaultTheme } from '../../../../styles/themes/default';
+import { Icon } from '~/components/Icon';
+import { defaultTheme } from '~/styles/themes/default';
 import { Content, ContentFeatures, FeaturesContainer } from './styles';
 
 const { colors } = defaultTheme;
