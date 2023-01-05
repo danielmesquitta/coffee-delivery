@@ -27,7 +27,20 @@ export const ConfirmedSaleContainer = styled.div`
     gap: 6rem;
 
     > img {
-      flex: 1;
+      width: 100%;
+    }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    > div {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 2.5rem;
+
+      > img {
+        width: 100%;
+      }
     }
   }
 `;
@@ -43,6 +56,10 @@ export const DetailsContainer = styled.div`
     )`};
   max-width: 33rem;
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    max-width: unset;
+  }
 `;
 
 export const Details = styled.ul`

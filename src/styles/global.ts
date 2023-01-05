@@ -63,4 +63,8 @@ export const GlobalStyle = createGlobalStyle`
   ul {
     list-style-type: none;
   }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    font-size: 87.5%;
+  }
 `;

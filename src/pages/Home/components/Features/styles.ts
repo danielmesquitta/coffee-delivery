@@ -7,11 +7,24 @@ export const FeaturesContainer = styled.section`
   padding: 6rem 0;
 
   > div {
-    width: 37rem;
+    max-width: 37rem;
   }
 
   > img {
     flex: 1;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    > img {
+      width: 100%;
+    }
+
+    padding: 3rem 0;
   }
 `;
 
@@ -24,6 +37,18 @@ export const Content = styled.div`
 
   > p {
     font-size: 1.25rem;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    > h1 {
+      font-weight: 800;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    > p {
+      font-size: 1.25rem;
+    }
   }
 `;
 
@@ -54,5 +79,9 @@ export const ContentFeatures = styled.div`
     &:nth-child(4) > span[color] {
       background-color: ${({ theme }) => theme.colors['secondary-500']};
     }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    grid-template-columns: 1fr;
   }
 `;

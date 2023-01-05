@@ -4,6 +4,10 @@ export const CheckInContainer = styled.div`
   display: flex;
   gap: 2rem;
   padding: 2.5rem 0;
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    flex-direction: column;
+  }
 `;
 
 export const CheckInSection = styled.section`
@@ -22,5 +26,12 @@ export const CheckInSection = styled.section`
   & + & {
     max-width: 28rem;
     min-width: 25rem;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    & + & {
+      max-width: unset;
+      min-width: unset;
+    }
   }
 `;

@@ -43,6 +43,11 @@ export const Detail = styled.li`
       }
     }
   }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Controllers = styled.div`

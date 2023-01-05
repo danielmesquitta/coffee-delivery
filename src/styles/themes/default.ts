@@ -4,6 +4,14 @@ export const defaultTheme = {
     heading: "'Baloo 2', cursive",
   },
 
+  breakpoints: {
+    lg: '1152px',
+    md: '992px',
+    sm: '768px',
+    xs: '576px',
+    xxs: '384px',
+  },
+
   colors: {
     white: '#FFF',
 

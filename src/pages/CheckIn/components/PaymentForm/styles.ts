@@ -23,6 +23,10 @@ export const PaymentFormContainer = styled.form`
 export const PaymentOptions = styled.div`
   display: flex;
   gap: 0.75rem;
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    flex-direction: column;
+  }
 `;
 
 export const PaymentOption = styled.label<PaymentOptionProps>`

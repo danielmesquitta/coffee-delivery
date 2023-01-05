@@ -65,6 +65,46 @@ export const AddressFormGrid = styled.div`
       grid-column: span 3;
     }
   }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    input {
+      &:nth-child(1) {
+        grid-column: span 3;
+      }
+
+      &:nth-child(2) {
+        grid-column: span 6;
+      }
+
+      &:nth-child(3) {
+        grid-column: span 2;
+      }
+
+      &:nth-child(4) {
+        grid-column: span 4;
+      }
+
+      &:nth-child(5) {
+        grid-column: span 6;
+      }
+
+      &:nth-child(6) {
+        grid-column: span 4;
+      }
+    }
+
+    select {
+      grid-column: span 2;
+    }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoints.xs}) {
+    input {
+      &:nth-child(1) {
+        grid-column: span 6;
+      }
+    }
+  }
 `;
 
 export const AddressFormFooter = styled.footer`

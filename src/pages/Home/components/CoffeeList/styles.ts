@@ -11,7 +11,7 @@ export const CoffeeListContainer = styled.section`
   ul {
     padding: 4rem 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 2rem;
   }
 `;
