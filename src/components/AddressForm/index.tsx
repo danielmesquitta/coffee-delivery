@@ -10,13 +10,13 @@ import { defaultTheme } from '~/styles/themes/default';
 import {
   AddressFormContainer,
   AddressFormFooter,
-  AddressFormGrid,
+  AddressFormGrid
 } from './styles';
 import type {
   AddressFormData,
   AddressFormProps,
   CEPApiResponse,
-  IBGEApiResponse,
+  IBGEApiResponse
 } from './types';
 
 const { colors } = defaultTheme;
@@ -68,7 +68,7 @@ export const AddressForm = ({ hasSubmitButton, ...rest }: AddressFormProps) => {
       setValue('address.street', street);
     };
 
-    if (zipCode.length === 8) {
+    if (zipCode?.length === 8) {
       fetchAddress();
     } else {
       setHasValidZipCode(false);

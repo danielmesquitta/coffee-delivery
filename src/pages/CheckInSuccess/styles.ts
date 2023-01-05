@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const ConfirmedSaleContainer = styled.div`
   min-height: calc(100vh - 7rem);
+  padding: 2rem 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

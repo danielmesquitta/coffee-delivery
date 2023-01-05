@@ -10,7 +10,7 @@ import {
   AddressButton,
   CartButton,
   HeaderContainer,
-  HeaderWrapper,
+  HeaderWrapper
 } from './styles';
 
 const { colors } = defaultTheme;
@@ -42,7 +42,7 @@ export const Header = () => {
             <Icon icon={Location} size={22} color={colors['secondary-700']} />
             {address?.city && address?.state
               ? `${address?.city}, ${address?.state}`
-              : 'Selecione um endereço'}
+              : ''}
           </AddressButton>
 
           <CartButton

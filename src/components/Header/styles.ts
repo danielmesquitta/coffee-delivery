@@ -10,6 +10,7 @@ export const HeaderWrapper = styled.header`
   width: 100vw;
   box-shadow: 0 0 0 1px ${({ theme }) => theme.colors['gray-200']};
   background-color: ${({ theme }) => theme.colors['gray-100']};
+  z-index: 10;
 `;
 
 export const HeaderContainer = styled.div`
