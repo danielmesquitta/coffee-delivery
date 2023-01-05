@@ -1,5 +1,7 @@
+import { useCallback } from 'react';
 import { Cart, Location } from 'react-ionicons';
 import { NavLink, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Icon } from '~/components/Icon';
 import { useCartContext } from '~/contexts/cart';
 import { useUserContext } from '~/contexts/user';
@@ -22,6 +24,12 @@ export const Header = () => {
 
   const cartIsDisabled = !cart.length;
 
+  const handleCartClick = useCallback(() => {
+    if (cartIsDisabled) {
+      toast.error('Seu carrinho está vazio!');
+    }
+  }, [cartIsDisabled]);
+
   return (
     <HeaderWrapper>
       <HeaderContainer>
@@ -40,6 +48,7 @@ export const Header = () => {
           <CartButton
             to={cartIsDisabled ? pathname : '/check-in'}
             disabled={cartIsDisabled}
+            onClick={handleCartClick}
           >
             <Icon
               icon={Cart}

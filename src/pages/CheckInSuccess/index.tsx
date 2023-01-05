@@ -1,19 +1,34 @@
+import { useMemo } from 'react';
 import { Card, Cash, Location, Time } from 'react-ionicons';
 import { Icon } from '~/components/Icon';
+import { useUserContext } from '~/contexts/user';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   ConfirmedSaleContainer,
   Detail,
   DetailContent,
   Details,
-  DetailsContainer,
+  DetailsContainer
 } from './styles';
-
-const isCash = true;
 
 const { colors } = defaultTheme;
 
-export const ConfirmedSale = () => {
+export const CheckInSuccess = () => {
+  const { address, paymentMethod } = useUserContext();
+
+  const ptbrPaymentMethod = useMemo(() => {
+    switch (paymentMethod) {
+    case 'CASH':
+      return 'Dinheiro';
+    case 'CREDIT_CARD':
+      return 'Cartão de crédito';
+    case 'DEBIT_CARD':
+      return 'Cartão de débito';
+    default:
+      return 'Dinheiro';
+    }
+  }, [paymentMethod]);
+
   return (
     <ConfirmedSaleContainer>
       <header>
@@ -30,9 +45,12 @@ export const ConfirmedSale = () => {
 
               <DetailContent>
                 <p>
-                  Entrega em <strong>Rua João Daniel Martinelli, 102</strong>
+                  {'Entrega em '}
+                  <strong>{`${address!.street}, ${address!.number}`}</strong>
                 </p>
-                <p>Farrapos - Porto Alegre, RS</p>
+                <p>{`${address!.neighborhood} - ${address!.city}, ${
+                  address!.state
+                }`}</p>
               </DetailContent>
             </Detail>
 
@@ -49,14 +67,14 @@ export const ConfirmedSale = () => {
 
             <Detail>
               <Icon
-                icon={isCash ? Cash : Card}
+                icon={paymentMethod === 'CASH' ? Cash : Card}
                 backgroundColor={colors['primary-700']}
               />
 
               <DetailContent>
                 <p>Pagamento na entrega</p>
                 <p>
-                  <strong>Cartão de crédito</strong>
+                  <strong>{ptbrPaymentMethod}</strong>
                 </p>
               </DetailContent>
             </Detail>

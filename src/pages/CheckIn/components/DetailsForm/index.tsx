@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { TrashOutline } from 'react-ionicons';
+import { useNavigate } from 'react-router-dom';
 import { AmountController } from '~/components/AmountController';
 import { Icon } from '~/components/Icon';
 import { useCartContext } from '~/contexts/cart';
@@ -13,7 +14,7 @@ import {
   Detail,
   Details,
   DetailsFooter,
-  DetailsFormContainer
+  DetailsFormContainer,
 } from './styles';
 
 const { colors } = defaultTheme;
@@ -21,11 +22,13 @@ const { colors } = defaultTheme;
 const deliveryPrice = 3.5;
 
 export const DetailsForm = () => {
+  const navigate = useNavigate();
+
   const { setAddress, setPaymentMethod } = useUserContext();
 
   const { handleSubmit } = useFormContext<CheckInFormData>();
 
-  const { cart, removeProduct, totalPrice } = useCartContext();
+  const { cart, removeProduct, totalPrice, emptyCart } = useCartContext();
 
   const handleRemoveProduct = useCallback(
     (productId: number) => {
@@ -39,8 +42,12 @@ export const DetailsForm = () => {
       setAddress(address);
 
       setPaymentMethod(paymentMethod);
+
+      emptyCart();
+
+      navigate('/check-in/success', { replace: true });
     },
-    [setAddress, setPaymentMethod],
+    [setAddress, setPaymentMethod, emptyCart, navigate],
   );
 
   return (

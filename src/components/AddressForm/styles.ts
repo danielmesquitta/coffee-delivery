@@ -26,7 +26,8 @@ export const AddressFormGrid = styled.div`
   column-gap: 0.75rem;
   row-gap: 1rem;
 
-  input {
+  input,
+  select {
     width: 100%;
     background: ${({ theme }) => theme.colors['gray-300']};
     border: 1px solid ${({ theme }) => theme.colors['gray-400']};
@@ -34,6 +35,12 @@ export const AddressFormGrid = styled.div`
     height: 2.625rem;
     padding: 0 0.75rem;
 
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  input {
     &:nth-child(1) {
       grid-column: span 2;
     }
@@ -56,10 +63,6 @@ export const AddressFormGrid = styled.div`
 
     &:nth-child(6) {
       grid-column: span 3;
-    }
-
-    &:nth-child(7) {
-      grid-column: span 1;
     }
   }
 `;

@@ -16,7 +16,7 @@ import {
   CardFooter,
   CardHeader,
   CardTags,
-  CoffeeListContainer
+  CoffeeListContainer,
 } from './styles';
 
 const { colors } = defaultTheme;
@@ -30,7 +30,7 @@ const productsFormValidationSchema = zod.object({
 type CartFormData = zod.infer<typeof productsFormValidationSchema>;
 
 export const CoffeeList = () => {
-  const { cart } = useCartContext();
+  const { cart, addProduct } = useCartContext();
 
   const navigate = useNavigate();
 
@@ -45,19 +45,28 @@ export const CoffeeList = () => {
     },
   });
 
-  const { handleSubmit } = productsForm;
+  const handleGoToCart = useCallback(
+    (productId: number) => {
+      const productIndex = cart.findIndex(
+        (product) => product.id === productId,
+      );
 
-  const handleGoToCart = useCallback(() => {
-    if (cart.length === 0) return;
+      const cartDoesNotHaveThisProduct = productIndex === -1;
 
-    navigate('/check-in');
-  }, [navigate, cart]);
+      if (cartDoesNotHaveThisProduct) {
+        addProduct(productId);
+      }
+
+      navigate('/check-in');
+    },
+    [cart, navigate, addProduct],
+  );
 
   return (
     <CoffeeListContainer>
       <h2>Nossos cafés</h2>
 
-      <form onSubmit={handleSubmit(handleGoToCart)}>
+      <form>
         <ul>
           <FormProvider {...productsForm}>
             {products.map(
@@ -87,7 +96,7 @@ export const CoffeeList = () => {
 
                     <AmountController productId={id} index={index} />
 
-                    <button type="submit">
+                    <button type="button" onClick={() => handleGoToCart(id)}>
                       <Icon icon={Cart} size={22} color={colors['gray-200']} />
                     </button>
                   </CardFooter>

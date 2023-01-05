@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { DefaultLayout } from '~/layouts/DefaultLayout';
 import { Address } from '~/pages/Address';
 import { CheckIn } from '~/pages/CheckIn';
-import { ConfirmedSale } from '~/pages/ConfirmedSale';
+import { CheckInSuccess } from '~/pages/CheckInSuccess';
 import { Home } from '~/pages/Home';
 
 export const Router: React.FC = () => {
@@ -13,7 +13,7 @@ export const Router: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/check-in" element={<CheckIn />} />
         <Route path="/address" element={<Address />} />
-        <Route path="/confirmed-sale" element={<ConfirmedSale />} />
+        <Route path="/check-in/success" element={<CheckInSuccess />} />
       </Route>
     </Routes>
   );
