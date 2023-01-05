@@ -57,6 +57,7 @@ export const AmountController = ({
       </button>
 
       <input
+        disabled
         type="number"
         placeholder="0"
         value={fields[index]?.amount}
