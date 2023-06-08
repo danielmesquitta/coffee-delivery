@@ -1,14 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Cart } from 'react-ionicons';
 import { useNavigate } from 'react-router-dom';
 import * as zod from 'zod';
 import { AmountController } from '~/components/AmountController';
 import { Icon } from '~/components/Icon';
-import { useCartContext } from '~/contexts/cart';
+import { api } from '~/helpers/api';
 import { formatNumberToCurrency } from '~/helpers/formatNumberToCurrency';
-import { products } from '~/reducers/cart/data';
+import { cartStore } from '~/store/cart';
+import { Product } from '~/store/types';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   Card,
@@ -29,10 +31,22 @@ const productsFormValidationSchema = zod.object({
 
 type CartFormData = zod.infer<typeof productsFormValidationSchema>;
 
-export const CoffeeList = () => {
-  const { cart, addProduct } = useCartContext();
+const { cart, addProduct } = cartStore;
+
+const CoffeeListComponent = () => {
+  const [products, setProducts] = useState<Product[]>([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await api<Product[]>('/products');
+
+      setProducts(response);
+    };
+
+    fetchProducts();
+  }, []);
 
   const productsForm = useForm<CartFormData>({
     resolver: zodResolver(productsFormValidationSchema),
@@ -46,20 +60,18 @@ export const CoffeeList = () => {
   });
 
   const handleGoToCart = useCallback(
-    (productId: number) => {
-      const productIndex = cart.findIndex(
-        (product) => product.id === productId,
-      );
+    (product: Product) => {
+      const productIndex = cart.findIndex(({ id }) => product.id === id);
 
       const cartDoesNotHaveThisProduct = productIndex === -1;
 
       if (cartDoesNotHaveThisProduct) {
-        addProduct(productId);
+        addProduct(product);
       }
 
       navigate('/check-in');
     },
-    [cart, navigate, addProduct],
+    [navigate],
   );
 
   return (
@@ -69,8 +81,10 @@ export const CoffeeList = () => {
       <form>
         <ul>
           <FormProvider {...productsForm}>
-            {products.map(
-              ({ id, imageSrc, tags, title, description, price }, index) => (
+            {products.map((product, index) => {
+              const { id, imageSrc, tags, title, description, price } = product;
+
+              return (
                 <Card key={id}>
                   <CardHeader>
                     <img src={imageSrc} alt={`Xícara de ${title}`} />
@@ -94,18 +108,23 @@ export const CoffeeList = () => {
                       {formatNumberToCurrency(price).replace('R$', '')}
                     </p>
 
-                    <AmountController productId={id} index={index} />
+                    <AmountController product={product} index={index} />
 
-                    <button type="button" onClick={() => handleGoToCart(id)}>
+                    <button
+                      type="button"
+                      onClick={() => handleGoToCart(product)}
+                    >
                       <Icon icon={Cart} size={22} color={colors['gray-200']} />
                     </button>
                   </CardFooter>
                 </Card>
-              ),
-            )}
+              );
+            })}
           </FormProvider>
         </ul>
       </form>
     </CoffeeListContainer>
   );
 };
+
+export const CoffeeList = observer(CoffeeListComponent);

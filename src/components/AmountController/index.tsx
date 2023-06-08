@@ -1,48 +1,43 @@
+import { observer } from 'mobx-react-lite';
 import { useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Add, Remove } from 'react-ionicons';
 import { Icon } from '~/components/Icon';
-import { useCartContext } from '~/contexts/cart';
+import { cartStore } from '~/store/cart';
 import { defaultTheme } from '~/styles/themes/default';
 import { AmountControllerContainer } from './styles';
 import type { AmountControllerProps } from './types';
 
 const { colors } = defaultTheme;
 
-export const AmountController = ({
+const { addProduct, subtractProduct, getProductAmount } = cartStore;
+
+const AmountControllerComponent = ({
   addButtonProps = {},
   subtractButtonProps = {},
   index,
-  productId,
+  product,
   ...inputProps
 }: AmountControllerProps) => {
-  const { addProduct, subtractProduct } = useCartContext();
+  const productAmount = getProductAmount(product.id);
 
   const { register } = useFormContext();
 
-  const { update, fields: f } = useFieldArray({
+  const { update } = useFieldArray({
     name: 'products',
   });
 
-  const fields = f as any as { amount: number }[];
-
   const handleAddButtonClick = useCallback(() => {
-    const { amount } = fields[index];
+    addProduct(product);
 
-    update(index, { amount: amount + 1, id: productId });
-
-    addProduct(productId);
-  }, [addProduct, fields, index, productId, update]);
+    update(index, { amount: productAmount, id: product.id });
+  }, [index, product, productAmount, update]);
 
   const handleSubtractButtonClick = useCallback(() => {
-    const { amount } = fields[index];
+    subtractProduct(product.id);
 
-    if (amount === 0) return;
-
-    update(index, { amount: amount - 1, id: productId });
-
-    subtractProduct(productId);
-  }, [fields, index, productId, subtractProduct, update]);
+    update(index, { amount: productAmount, id: product.id });
+  }, [index, product, productAmount, update]);
 
   return (
     <AmountControllerContainer>
@@ -60,7 +55,7 @@ export const AmountController = ({
         disabled
         type="number"
         placeholder="0"
-        value={fields[index]?.amount}
+        value={productAmount}
         {...inputProps}
         {...register(`products.${index}.amount`, { valueAsNumber: true })}
       />
@@ -71,3 +66,5 @@ export const AmountController = ({
     </AmountControllerContainer>
   );
 };
+
+export const AmountController = observer(AmountControllerComponent);
