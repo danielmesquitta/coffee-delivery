@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Cart } from 'react-ionicons';
@@ -31,9 +31,9 @@ const productsFormValidationSchema = zod.object({
 
 type CartFormData = zod.infer<typeof productsFormValidationSchema>;
 
-const { cart, addProduct } = cartStore;
+export const CoffeeList = observer(() => {
+  const { cart, addProduct } = cartStore;
 
-const CoffeeListComponent = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const CoffeeListComponent = () => {
 
       navigate('/check-in');
     },
-    [navigate],
+    [addProduct, cart, navigate],
   );
 
   return (
@@ -125,6 +125,4 @@ const CoffeeListComponent = () => {
       </form>
     </CoffeeListContainer>
   );
-};
-
-export const CoffeeList = observer(CoffeeListComponent);
+});

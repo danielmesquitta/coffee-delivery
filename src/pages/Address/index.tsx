@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import * as zod from 'zod';
 import { AddressForm } from '~/components/AddressForm';
 import { AddressFormData } from '~/components/AddressForm/types';
-import { useUserContext } from '~/contexts/user';
+import { userStore } from '~/store/user';
 import { AddressContainer } from './styles';
 
 const addressFormValidationSchema = zod.object({
@@ -24,8 +25,8 @@ const addressFormValidationSchema = zod.object({
     .required(),
 });
 
-export const Address = () => {
-  const { address } = useUserContext();
+export const Address = observer(() => {
+  const { address } = userStore;
 
   const addressForm = useForm<AddressFormData>({
     resolver: zodResolver(addressFormValidationSchema),
@@ -56,4 +57,4 @@ export const Address = () => {
       </FormProvider>
     </AddressContainer>
   );
-};
+});

@@ -1,13 +1,36 @@
-import { makeAutoObservable } from 'mobx';
+import { autorun, makeAutoObservable } from 'mobx';
 
 import { Product, SelectedProduct } from './types';
 
+const cartLocalStorageKey = '@coffee-delivery:cart-v1.0';
+
 class CartStore {
-  cart = [] as SelectedProduct[];
-  totalPrice = 0;
+  public cart = [] as SelectedProduct[];
 
   constructor() {
     makeAutoObservable(this);
+
+    this.loadCartFromLocalStorage();
+  }
+
+  private loadCartFromLocalStorage = () => {
+    const storedStateAsJSON = localStorage.getItem(cartLocalStorageKey);
+
+    if (storedStateAsJSON) {
+      this.cart = JSON.parse(storedStateAsJSON) as SelectedProduct[];
+    }
+  };
+
+  public saveCartToLocalStorage = () => {
+    localStorage.setItem(cartLocalStorageKey, JSON.stringify(this.cart));
+  };
+
+  public clearCartLocalStorage = () => {
+    localStorage.removeItem(cartLocalStorageKey);
+  };
+
+  get totalPrice() {
+    return this.cart.reduce((acc, { totalPrice }) => acc + totalPrice!, 0);
   }
 
   getProductAmount = (productId: number) =>
@@ -30,12 +53,9 @@ class CartStore {
       currProduct.totalPrice! += product.price;
 
       // increment cart total price
-      this.totalPrice += product.price;
     } else {
       this.cart.push({ ...product, amount: 1, totalPrice: product.price });
     }
-
-    this.totalPrice += product.price;
   };
 
   subtractProduct = (productId: number) => {
@@ -63,18 +83,11 @@ class CartStore {
 
       // decrement product total price in cart
       currProduct.totalPrice! -= currProduct.price;
-
-      // decrement cart total price
-      this.totalPrice -= currProduct.price;
     }
   };
 
   removeProduct = (productId: number) => {
-    const productIsInCartIndex = this.cart.findIndex(
-      ({ id }) => id === productId,
-    );
-
-    const productIsInCart = productIsInCartIndex !== -1;
+    const productIsInCart = this.cart.some(({ id }) => id === productId);
 
     if (!productIsInCart) {
       // do nothing if product is not in cart
@@ -87,9 +100,17 @@ class CartStore {
 
   emptyCart = () => {
     this.cart = [];
-
-    this.totalPrice = 0;
   };
 }
 
-export const cartStore = new CartStore();
+const cartStore = new CartStore();
+
+autorun(() => {
+  if (cartStore.cart.length) {
+    cartStore.saveCartToLocalStorage();
+  } else {
+    cartStore.clearCartLocalStorage();
+  }
+});
+
+export { cartStore };

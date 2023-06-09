@@ -1,31 +1,32 @@
+import { observer } from 'mobx-react';
 import { useMemo } from 'react';
 import { Card, Cash, Location, Time } from 'react-ionicons';
 import { Icon } from '~/components/Icon';
-import { useUserContext } from '~/contexts/user';
+import { userStore } from '~/store/user';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   ConfirmedSaleContainer,
   Detail,
   DetailContent,
   Details,
-  DetailsContainer
+  DetailsContainer,
 } from './styles';
 
 const { colors } = defaultTheme;
 
-export const CheckInSuccess = () => {
-  const { address, paymentMethod } = useUserContext();
+export const CheckInSuccess = observer(() => {
+  const { address, paymentMethod } = userStore;
 
   const ptbrPaymentMethod = useMemo(() => {
     switch (paymentMethod) {
-    case 'CASH':
-      return 'Dinheiro';
-    case 'CREDIT_CARD':
-      return 'Cartão de crédito';
-    case 'DEBIT_CARD':
-      return 'Cartão de débito';
-    default:
-      return 'Dinheiro';
+      case 'CASH':
+        return 'Dinheiro';
+      case 'CREDIT_CARD':
+        return 'Cartão de crédito';
+      case 'DEBIT_CARD':
+        return 'Cartão de débito';
+      default:
+        return 'Dinheiro';
     }
   }, [paymentMethod]);
 
@@ -88,4 +89,4 @@ export const CheckInSuccess = () => {
       </div>
     </ConfirmedSaleContainer>
   );
-};
+});

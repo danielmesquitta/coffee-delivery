@@ -1,13 +1,14 @@
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
+import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { TrashOutline } from 'react-ionicons';
 import { useNavigate } from 'react-router-dom';
 import { AmountController } from '~/components/AmountController';
 import { Icon } from '~/components/Icon';
-import { useUserContext } from '~/contexts/user';
 import { formatNumberToCurrency } from '~/helpers/formatNumberToCurrency';
 import type { CheckInFormData } from '~/pages/CheckIn';
 import { cartStore } from '~/store/cart';
+import { userStore } from '~/store/user';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   Controllers,
@@ -21,28 +22,33 @@ const { colors } = defaultTheme;
 
 const deliveryPrice = 3.5;
 
-const { cart, removeProduct, totalPrice, emptyCart } = cartStore;
+export const DetailsForm = observer(() => {
+  const { cart, removeProduct, totalPrice, emptyCart } = cartStore;
+  const { setAddress, setPaymentMethod } = userStore;
 
-const DetailsFormComponent = () => {
   const navigate = useNavigate();
-
-  const { setAddress, setPaymentMethod } = useUserContext();
 
   const { handleSubmit } = useFormContext<CheckInFormData>();
 
-  const handleRemoveProduct = (productId: number) => {
-    removeProduct(productId);
-  };
+  const handleRemoveProduct = useCallback(
+    (productId: number) => {
+      removeProduct(productId);
+    },
+    [removeProduct],
+  );
 
-  const handleDetailsSubmit = ({ address, paymentMethod }: CheckInFormData) => {
-    setAddress(address);
+  const handleDetailsSubmit = useCallback(
+    ({ address, paymentMethod }: CheckInFormData) => {
+      setAddress(address);
 
-    setPaymentMethod(paymentMethod);
+      setPaymentMethod(paymentMethod);
 
-    emptyCart();
+      emptyCart();
 
-    navigate('/check-in/success', { replace: true });
-  };
+      navigate('/check-in/success', { replace: true });
+    },
+    [emptyCart, navigate, setAddress, setPaymentMethod],
+  );
 
   return (
     <DetailsFormContainer onSubmit={handleSubmit(handleDetailsSubmit)}>
@@ -94,6 +100,4 @@ const DetailsFormComponent = () => {
       </DetailsFooter>
     </DetailsFormContainer>
   );
-};
-
-export const DetailsForm = observer(DetailsFormComponent);
+});

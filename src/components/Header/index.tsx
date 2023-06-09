@@ -1,11 +1,11 @@
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { Cart, Location } from 'react-ionicons';
 import { NavLink, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Icon } from '~/components/Icon';
-import { useUserContext } from '~/contexts/user';
 import { cartStore } from '~/store/cart';
+import { userStore } from '~/store/user';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   AddressButton,
@@ -16,20 +16,19 @@ import {
 
 const { colors } = defaultTheme;
 
-const { cart } = cartStore;
+export const Header = observer(() => {
+  const { cart } = cartStore;
+  const { address } = userStore;
 
-const HeaderComponent = () => {
+  const cartIsEmpty = !cart.length;
+
   const { pathname } = useLocation();
 
-  const { address } = useUserContext();
-
-  const cartIsDisabled = !cart.length;
-
   const handleCartClick = useCallback(() => {
-    if (cartIsDisabled) {
+    if (cartIsEmpty) {
       toast.error('Seu carrinho está vazio!');
     }
-  }, [cartIsDisabled]);
+  }, [cartIsEmpty]);
 
   return (
     <HeaderWrapper>
@@ -47,24 +46,20 @@ const HeaderComponent = () => {
           </AddressButton>
 
           <CartButton
-            to={cartIsDisabled ? pathname : '/check-in'}
-            disabled={cartIsDisabled}
+            to={cartIsEmpty ? pathname : '/check-in'}
+            disabled={cartIsEmpty}
             onClick={handleCartClick}
           >
             <Icon
               icon={Cart}
               size={22}
-              color={
-                cartIsDisabled ? colors['gray-600'] : colors['primary-700']
-              }
+              color={cartIsEmpty ? colors['gray-600'] : colors['primary-700']}
             />
 
-            {Boolean(cart.length) && <span>{cart.length}</span>}
+            {!cartIsEmpty && <span>{cart.length}</span>}
           </CartButton>
         </nav>
       </HeaderContainer>
     </HeaderWrapper>
   );
-};
-
-export const Header = observer(HeaderComponent);
+});

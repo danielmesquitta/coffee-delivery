@@ -1,4 +1,4 @@
-import type { Address } from '~/contexts/user/types';
+import type { Address } from '~/store/user/types';
 
 export interface AddressFormData {
   address: Address;

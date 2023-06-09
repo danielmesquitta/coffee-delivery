@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as zod from 'zod';
 import { AddressForm } from '~/components/AddressForm';
-import { useUserContext } from '~/contexts/user';
 import { cartStore } from '~/store/cart';
+import { userStore } from '~/store/user';
 import { DetailsForm } from './components/DetailsForm';
 import { PaymentForm } from './components/PaymentForm';
 import { CheckInContainer, CheckInSection } from './styles';
@@ -45,12 +45,11 @@ const checkInFormValidationSchema = zod.object({
 
 export type CheckInFormData = zod.infer<typeof checkInFormValidationSchema>;
 
-const { cart } = cartStore;
+export const CheckIn = observer(() => {
+  const { cart } = cartStore;
+  const { address, paymentMethod } = userStore;
 
-const CheckInComponent = () => {
   const navigate = useNavigate();
-
-  const { address, paymentMethod } = useUserContext();
 
   const checkInForm = useForm<CheckInFormData>({
     resolver: zodResolver(checkInFormValidationSchema),
@@ -72,7 +71,7 @@ const CheckInComponent = () => {
 
       navigate('/');
     }
-  }, [navigate]);
+  }, [cart.length, navigate]);
 
   useEffect(() => {
     const { errors } = checkInForm.formState;
@@ -104,6 +103,4 @@ const CheckInComponent = () => {
       </FormProvider>
     </CheckInContainer>
   );
-};
-
-export const CheckIn = observer(CheckInComponent);
+});
