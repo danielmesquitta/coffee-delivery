@@ -4,36 +4,56 @@ import type { CartAction, CartState } from './types';
 
 export const localStorageCartKey = '@coffee-delivery:cart-state-v1.0';
 
+const setCartInLocalStorage = (newCartState: CartState) => {
+  localStorage.setItem(localStorageCartKey, JSON.stringify(newCartState));
+};
+
 export const cartReducer = (
   state: CartState,
   action: CartAction,
 ): CartState => {
-  const setCartInLocalStorage = (newCartState: CartState) => {
-    localStorage.setItem(localStorageCartKey, JSON.stringify(newCartState));
-  };
-
   switch (action.type) {
-  case ActionTypes.ADD_PRODUCT: {
-    const cartDraft = [...state.cart];
+    case ActionTypes.ADD_PRODUCT: {
+      const cartDraft = [...state.cart];
 
-    const productIndex = cartDraft.findIndex(
-      (product) => product.id === action.payload!.productId,
-    );
-
-    const productNotFoundInCart = productIndex < 0;
-
-    if (productNotFoundInCart) {
-      const product = products.find(
+      const productIndex = cartDraft.findIndex(
         (product) => product.id === action.payload!.productId,
       );
 
-      const productNotFoundInCart = !product;
+      const productNotFoundInCart = productIndex < 0;
 
       if (productNotFoundInCart) {
-        throw new Error('Invalid product id');
+        const product = products.find(
+          (product) => product.id === action.payload!.productId,
+        );
+
+        const productNotFoundInCart = !product;
+
+        if (productNotFoundInCart) {
+          throw new Error('Invalid product id');
+        }
+
+        cartDraft.push({ ...product!, amount: 1, totalPrice: product.price });
+
+        const newCartState: CartState = {
+          cart: cartDraft,
+          totalPrice: state.totalPrice + product.price,
+        };
+
+        setCartInLocalStorage(newCartState);
+
+        return newCartState;
       }
 
-      cartDraft.push({ ...product!, amount: 1, totalPrice: product.price });
+      const product = cartDraft[productIndex];
+
+      const newAmount = Number(product.amount) + 1;
+
+      cartDraft[productIndex] = {
+        ...product,
+        amount: newAmount,
+        totalPrice: product.price * newAmount,
+      };
 
       const newCartState: CartState = {
         cart: cartDraft,
@@ -45,45 +65,43 @@ export const cartReducer = (
       return newCartState;
     }
 
-    const product = cartDraft[productIndex];
+    case ActionTypes.SUBTRACT_PRODUCT: {
+      const cartDraft = [...state.cart];
 
-    const newAmount = Number(product.amount) + 1;
+      const productIndex = state.cart.findIndex(
+        (product) => product.id === action.payload!.productId,
+      );
 
-    cartDraft[productIndex] = {
-      ...product,
-      amount: newAmount,
-      totalPrice: product.price * newAmount,
-    };
+      const productNotFoundInCart = productIndex < 0;
 
-    const newCartState: CartState = {
-      cart: cartDraft,
-      totalPrice: state.totalPrice + product.price,
-    };
+      if (productNotFoundInCart) {
+        return state;
+      }
 
-    setCartInLocalStorage(newCartState);
+      const product = cartDraft[productIndex];
 
-    return newCartState;
-  }
+      const amount = Number(product.amount);
 
-  case ActionTypes.SUBTRACT_PRODUCT: {
-    const cartDraft = [...state.cart];
+      if (amount === 1) {
+        cartDraft.splice(productIndex, 1);
 
-    const productIndex = state.cart.findIndex(
-      (product) => product.id === action.payload!.productId,
-    );
+        const newCartState: CartState = {
+          cart: cartDraft,
+          totalPrice: state.totalPrice - product.price,
+        };
 
-    const productNotFoundInCart = productIndex < 0;
+        setCartInLocalStorage(newCartState);
 
-    if (productNotFoundInCart) {
-      return state;
-    }
+        return newCartState;
+      }
 
-    const product = cartDraft[productIndex];
+      const newAmount = amount - 1;
 
-    const amount = Number(product.amount);
-
-    if (amount === 1) {
-      cartDraft.splice(productIndex, 1);
+      cartDraft[productIndex] = {
+        ...product,
+        amount: newAmount,
+        totalPrice: product.price * newAmount,
+      };
 
       const newCartState: CartState = {
         cart: cartDraft,
@@ -95,64 +113,46 @@ export const cartReducer = (
       return newCartState;
     }
 
-    const newAmount = amount - 1;
+    case ActionTypes.REMOVE_PRODUCT: {
+      const cartDraft = [...state.cart];
 
-    cartDraft[productIndex] = {
-      ...product,
-      amount: newAmount,
-      totalPrice: product.price * newAmount,
-    };
+      const productIndex = state.cart.findIndex(
+        (product) => product.id === action.payload!.productId,
+      );
 
-    const newCartState: CartState = {
-      cart: cartDraft,
-      totalPrice: state.totalPrice - product.price,
-    };
+      const productNotFoundInCart = productIndex < 0;
 
-    setCartInLocalStorage(newCartState);
+      if (productNotFoundInCart) {
+        return state;
+      }
 
-    return newCartState;
-  }
+      cartDraft.splice(productIndex, 1);
 
-  case ActionTypes.REMOVE_PRODUCT: {
-    const cartDraft = [...state.cart];
+      const product = state.cart[productIndex];
 
-    const productIndex = state.cart.findIndex(
-      (product) => product.id === action.payload!.productId,
-    );
+      const newCartState: CartState = {
+        cart: cartDraft,
+        totalPrice: state.totalPrice - (product.totalPrice ?? 0),
+      };
 
-    const productNotFoundInCart = productIndex < 0;
+      setCartInLocalStorage(newCartState);
 
-    if (productNotFoundInCart) {
-      return state;
+      return newCartState;
     }
 
-    cartDraft.splice(productIndex, 1);
+    case ActionTypes.EMPTY_CART: {
+      const newCartState: CartState = {
+        cart: [],
+        totalPrice: 0,
+      };
 
-    const product = state.cart[productIndex];
+      setCartInLocalStorage(newCartState);
 
-    const newCartState: CartState = {
-      cart: cartDraft,
-      totalPrice: state.totalPrice - (product.totalPrice ?? 0),
-    };
+      return newCartState;
+    }
 
-    setCartInLocalStorage(newCartState);
-
-    return newCartState;
-  }
-
-  case ActionTypes.EMPTY_CART: {
-    const newCartState: CartState = {
-      cart: [],
-      totalPrice: 0,
-    };
-
-    setCartInLocalStorage(newCartState);
-
-    return  newCartState;
-  }
-
-  default: {
-    return state;
-  }
+    default: {
+      return state;
+    }
   }
 };
