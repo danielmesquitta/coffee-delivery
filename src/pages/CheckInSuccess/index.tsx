@@ -14,7 +14,7 @@ import {
 
 const { colors } = defaultTheme;
 
-export const CheckInSuccess = observer(() => {
+const CheckInSuccess = observer(() => {
   const { address, paymentMethod } = userStore;
 
   const ptbrPaymentMethod = useMemo(() => {
@@ -90,3 +90,5 @@ export const CheckInSuccess = observer(() => {
     </ConfirmedSaleContainer>
   );
 });
+
+export default CheckInSuccess;

@@ -45,7 +45,7 @@ const checkInFormValidationSchema = zod.object({
 
 export type CheckInFormData = zod.infer<typeof checkInFormValidationSchema>;
 
-export const CheckIn = observer(() => {
+const CheckIn = observer(() => {
   const { cart } = cartStore;
   const { address, paymentMethod } = userStore;
 
@@ -104,3 +104,5 @@ export const CheckIn = observer(() => {
     </CheckInContainer>
   );
 });
+
+export default CheckIn;

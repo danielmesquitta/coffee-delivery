@@ -25,7 +25,7 @@ const addressFormValidationSchema = zod.object({
     .required(),
 });
 
-export const Address = observer(() => {
+const Address = observer(() => {
   const { address } = userStore;
 
   const addressForm = useForm<AddressFormData>({
@@ -58,3 +58,5 @@ export const Address = observer(() => {
     </AddressContainer>
   );
 });
+
+export default Address;
