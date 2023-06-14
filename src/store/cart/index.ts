@@ -113,4 +113,4 @@ autorun(() => {
   }
 });
 
-export { cartStore };
+export { CartStore, cartStore };

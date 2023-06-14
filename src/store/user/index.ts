@@ -83,4 +83,4 @@ autorun(() => {
     : userStore.clearPaymentMethodLocalStorage();
 });
 
-export { userStore };
+export { UserStore, userStore };
