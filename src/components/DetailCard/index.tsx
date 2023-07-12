@@ -1,11 +1,13 @@
 import { observer } from 'mobx-react';
 import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { TrashOutline } from 'react-ionicons';
 import { AmountController } from '~/components/AmountController';
 import { Icon } from '~/components/Icon';
-import { formatNumberToCurrency } from '~/helpers/formatNumberToCurrency';
 import { cartStore } from '~/store/cart';
+import { Product } from '~/store/cart/types';
 import { defaultTheme } from '~/styles/themes/default';
+import { formatNumberToCurrency } from '~/utils/formatNumberToCurrency';
 import { Controllers, DetailContainer } from './styles';
 import { DetailCardProps } from './types';
 
@@ -13,6 +15,8 @@ const { colors } = defaultTheme;
 
 export const DetailCard = observer(
   ({ product, index, ...rest }: DetailCardProps) => {
+    const { setValue, getValues } = useFormContext();
+
     const { id, imageSrc, title, price } = product;
 
     const { removeProduct } = cartStore;
@@ -20,8 +24,15 @@ export const DetailCard = observer(
     const handleRemoveProduct = useCallback(
       (productId: number) => {
         removeProduct(productId);
+
+        const products: Product[] = getValues('products');
+
+        setValue(
+          'products',
+          products.filter(({ id }) => id !== productId),
+        );
       },
-      [removeProduct],
+      [getValues, removeProduct, setValue],
     );
 
     return (

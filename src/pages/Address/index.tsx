@@ -3,27 +3,28 @@ import { observer } from 'mobx-react';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import * as zod from 'zod';
+import { z } from 'zod';
 import { AddressForm } from '~/components/AddressForm';
-import { AddressFormData } from '~/components/AddressForm/types';
 import { userStore } from '~/store/user';
 import { AddressContainer } from './styles';
 
-const addressFormValidationSchema = zod.object({
-  address: zod
+const addressFormValidationSchema = z.object({
+  address: z
     .object({
-      zipCode: zod
+      zipCode: z
         .string()
         .regex(/^\d{5}-\d{3}$/, 'O CEP deve ter o formato 00000-000'),
-      street: zod.string().min(1, 'A rua é obrigatória'),
-      number: zod.string().min(1, 'O número é obrigatório'),
-      complement: zod.string(),
-      neighborhood: zod.string().min(1, 'O bairro é obrigatório'),
-      city: zod.string().min(1, 'A cidade é obrigatória'),
-      state: zod.string().min(1, 'O estado é obrigatório'),
+      street: z.string().min(1, 'A rua é obrigatória'),
+      number: z.string().min(1, 'O número é obrigatório'),
+      complement: z.string(),
+      neighborhood: z.string().min(1, 'O bairro é obrigatório'),
+      city: z.string().min(1, 'A cidade é obrigatória'),
+      state: z.string().min(1, 'O estado é obrigatório'),
     })
     .required(),
 });
+
+type AddressFormData = z.infer<typeof addressFormValidationSchema>;
 
 const Address = observer(() => {
   const { address } = userStore;

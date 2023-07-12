@@ -6,10 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as zod from 'zod';
 import { AddressForm } from '~/components/AddressForm';
+import { DetailsForm } from '~/components/DetailsForm';
+import { PaymentForm } from '~/components/PaymentForm';
 import { cartStore } from '~/store/cart';
 import { userStore } from '~/store/user';
-import { DetailsForm } from './components/DetailsForm';
-import { PaymentForm } from './components/PaymentForm';
 import { CheckInContainer, CheckInSection } from './styles';
 
 const checkInFormValidationSchema = zod.object({

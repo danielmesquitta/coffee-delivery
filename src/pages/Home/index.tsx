@@ -1,5 +1,5 @@
-import { CoffeeList } from './components/CoffeeList';
-import { Features } from './components/Features';
+import { CoffeeList } from '~/components/CoffeeList';
+import { Features } from '~/components/Features';
 import { HomeContainer } from './styles';
 
 const Home = () => {

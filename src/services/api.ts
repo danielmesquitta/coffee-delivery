@@ -1,2 +1,5 @@
-export const api = <T = any>(url: string) =>
-  fetch(`http://localhost:3001${url}`).then((res) => res.json() as T);
+import axios from 'axios';
+
+export const api = axios.create({
+  baseURL: 'http://localhost:3001',
+});

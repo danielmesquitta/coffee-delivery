@@ -2,10 +2,10 @@ import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { formatNumberToCurrency } from '~/helpers/formatNumberToCurrency';
 import type { CheckInFormData } from '~/pages/CheckIn';
 import { cartStore } from '~/store/cart';
 import { userStore } from '~/store/user';
+import { formatNumberToCurrency } from '~/utils/formatNumberToCurrency';
 import { DetailCard } from '../DetailCard';
 import { Details, DetailsFooter, DetailsFormContainer } from './styles';
 

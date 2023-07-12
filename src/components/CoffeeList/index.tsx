@@ -2,20 +2,20 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { observer } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import * as zod from 'zod';
+import { z } from 'zod';
 import { api } from '~/services/api';
 import { cartStore } from '~/store/cart';
 import { Product } from '~/store/cart/types';
-import { Card } from '../Card';
+import { CoffeeItem } from '../CoffeeItem';
 import { CoffeeListContainer } from './styles';
 
-const productsFormValidationSchema = zod.object({
-  products: zod.array(
-    zod.object({ id: zod.number().min(1), amount: zod.number().min(0) }),
+const productsFormValidationSchema = z.object({
+  products: z.array(
+    z.object({ id: z.number().min(1), amount: z.number().min(0) }),
   ),
 });
 
-type CartFormData = zod.infer<typeof productsFormValidationSchema>;
+type ProductsFormData = z.infer<typeof productsFormValidationSchema>;
 
 export const CoffeeList = observer(() => {
   const { cart } = cartStore;
@@ -23,16 +23,10 @@ export const CoffeeList = observer(() => {
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await api<Product[]>('/products');
-
-      setProducts(response);
-    };
-
-    fetchProducts();
+    api<Product[]>('/products').then(({ data }) => setProducts(data));
   }, []);
 
-  const productsForm = useForm<CartFormData>({
+  const productsForm = useForm<ProductsFormData>({
     resolver: zodResolver(productsFormValidationSchema),
     defaultValues: {
       products: products.map(({ id }) => {
@@ -51,7 +45,7 @@ export const CoffeeList = observer(() => {
         <ul>
           <FormProvider {...productsForm}>
             {products.map((product, index) => (
-              <Card key={product.id} index={index} product={product} />
+              <CoffeeItem key={product.id} index={index} product={product} />
             ))}
           </FormProvider>
         </ul>

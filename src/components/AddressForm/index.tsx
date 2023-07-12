@@ -64,7 +64,13 @@ export const AddressForm = observer(
 
         const { city, neighborhood, state, street } = data;
 
-        setHasValidZipCode(Boolean(street));
+        const isValidZipCode = Boolean(street);
+
+        setHasValidZipCode(isValidZipCode);
+
+        if (!isValidZipCode) {
+          return;
+        }
 
         setValue('address.city', city);
         setValue('address.neighborhood', neighborhood);
