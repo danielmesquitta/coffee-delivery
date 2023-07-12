@@ -1,4 +1,4 @@
-import type { PaymentMethod } from '~/contexts/user/types';
+import type { PaymentMethod } from '~/store/user/types';
 
 export interface PaymentFormData {
   paymentMethod: PaymentMethod;

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import {
   CardOutline,
@@ -6,6 +7,7 @@ import {
   WalletOutline,
 } from 'react-ionicons';
 import { Icon } from '~/components/Icon';
+import { userStore } from '~/store/user';
 import { defaultTheme } from '~/styles/themes/default';
 import { PaymentFormContainer, PaymentOption, PaymentOptions } from './styles';
 import type { PaymentFormData } from './types';
@@ -13,9 +15,15 @@ import type { PaymentFormData } from './types';
 const { colors } = defaultTheme;
 
 export const PaymentForm = () => {
+  const { setPaymentMethod } = userStore;
+
   const { register, watch } = useFormContext<PaymentFormData>();
 
   const paymentMethod = watch('paymentMethod');
+
+  useEffect(() => {
+    setPaymentMethod(paymentMethod);
+  }, [paymentMethod, setPaymentMethod]);
 
   return (
     <PaymentFormContainer>

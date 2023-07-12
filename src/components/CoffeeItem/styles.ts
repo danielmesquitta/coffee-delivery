@@ -1,22 +1,6 @@
 import styled from 'styled-components';
 
-export const CoffeeListContainer = styled.section`
-  padding: 2rem 0;
-
-  > h2 {
-    color: ${({ theme }) => theme.colors['gray-800']};
-    font-size: 2rem;
-  }
-
-  ul {
-    padding: 4rem 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 2rem;
-  }
-`;
-
-export const Card = styled.li`
+export const CoffeeItemContainer = styled.li`
   padding: 1.25rem;
   border-radius: 6px 36px;
   background-color: ${({ theme }) => theme.colors['gray-200']};
@@ -25,7 +9,7 @@ export const Card = styled.li`
   flex-direction: column;
 `;
 
-export const CardHeader = styled.header`
+export const CoffeeItemHeader = styled.header`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +21,7 @@ export const CardHeader = styled.header`
   }
 `;
 
-export const CardTags = styled.div`
+export const CoffeeItemTags = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +38,7 @@ export const CardTags = styled.div`
   }
 `;
 
-export const CardContent = styled.div`
+export const CoffeeItemContent = styled.div`
   padding-bottom: 2rem;
   text-align: center;
   flex: 1;
@@ -71,7 +55,7 @@ export const CardContent = styled.div`
   }
 `;
 
-export const CardFooter = styled.footer`
+export const CoffeeItemFooter = styled.footer`
   display: flex;
   align-items: center;
 

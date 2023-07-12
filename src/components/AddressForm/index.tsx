@@ -1,181 +1,196 @@
+import { observer } from 'mobx-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import InputMask from 'react-input-mask';
 import { LocationOutline } from 'react-ionicons';
 import { toast } from 'react-toastify';
 import { Icon } from '~/components/Icon';
-import { useUserContext } from '~/contexts/user';
 import { brasilApi } from '~/services/brasilApi';
+import { userStore } from '~/store/user';
 import { defaultTheme } from '~/styles/themes/default';
 import {
   AddressFormContainer,
   AddressFormFooter,
-  AddressFormGrid
+  AddressFormGrid,
 } from './styles';
 import type {
   AddressFormData,
   AddressFormProps,
   CEPApiResponse,
-  IBGEApiResponse
+  IBGEApiResponse,
 } from './types';
 
 const { colors } = defaultTheme;
 
-export const AddressForm = ({ hasSubmitButton, ...rest }: AddressFormProps) => {
-  const { register, handleSubmit, watch, setValue } =
-    useFormContext<AddressFormData>();
+export const AddressForm = observer(
+  ({ hasSubmitButton, ...rest }: AddressFormProps) => {
+    const { setAddress } = userStore;
 
-  const [hasValidZipCode, setHasValidZipCode] = useState(false);
+    const { register, handleSubmit, watch, setValue } =
+      useFormContext<AddressFormData>();
 
-  const { setAddress } = useUserContext();
+    const [hasValidZipCode, setHasValidZipCode] = useState(false);
 
-  const [states, setStates] = useState<string[]>([]);
+    const [states, setStates] = useState<string[]>([]);
 
-  const handleAddressSubmit = useCallback(
-    ({ address }: AddressFormData) => {
-      setAddress(address);
+    const handleAddressSubmit = useCallback(
+      ({ address }: AddressFormData) => {
+        setAddress(address);
 
-      toast.success('Endereço atualizado com sucesso!');
-    },
-    [setAddress],
-  );
+        toast.success('Endereço atualizado com sucesso!');
+      },
+      [setAddress],
+    );
 
-  const zipCode = watch('address.zipCode')?.replace(/\D/g, '');
+    const zipCode = watch('address.zipCode')?.replace(/\D/g, '');
 
-  useEffect(() => {
-    const fetchStates = async () => {
-      const { data } = await brasilApi<IBGEApiResponse>('/ibge/uf/v1');
+    useEffect(() => {
+      const fetchStates = async () => {
+        const { data } = await brasilApi<IBGEApiResponse>('/ibge/uf/v1');
 
-      const formattedStates = data.map(({ sigla: acronym }) => acronym).sort();
+        const formattedStates = data
+          .map(({ sigla: acronym }) => acronym)
+          .sort();
 
-      setStates(formattedStates);
-    };
+        setStates(formattedStates);
+      };
 
-    fetchStates();
-  }, []);
+      fetchStates();
+    }, []);
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      const { data } = await brasilApi<CEPApiResponse>(`/cep/v2/${zipCode}`);
+    useEffect(() => {
+      const fetchAddress = async () => {
+        const { data } = await brasilApi<CEPApiResponse>(`/cep/v2/${zipCode}`);
 
-      const { city, neighborhood, state, street } = data;
+        const { city, neighborhood, state, street } = data;
 
-      setHasValidZipCode(Boolean(street));
+        const isValidZipCode = Boolean(street);
 
-      setValue('address.city', city);
-      setValue('address.neighborhood', neighborhood);
-      setValue('address.state', state);
-      setValue('address.street', street);
-    };
+        setHasValidZipCode(isValidZipCode);
 
-    if (zipCode?.length === 8) {
-      fetchAddress();
-    } else {
-      setHasValidZipCode(false);
-    }
-  }, [register, setValue, zipCode]);
+        if (!isValidZipCode) {
+          return;
+        }
 
-  return (
-    <AddressFormContainer
-      {...rest}
-      onSubmit={handleSubmit(handleAddressSubmit)}
-    >
-      <header>
-        <Icon icon={LocationOutline} size={22} color={colors['primary-500']} />
+        setValue('address.city', city);
+        setValue('address.neighborhood', neighborhood);
+        setValue('address.state', state);
+        setValue('address.street', street);
+      };
 
-        <div>
-          <strong>Endereço de entrega</strong>
-          <p>Informe o endereço onde deseja receber o pedido</p>
-        </div>
-      </header>
+      if (zipCode?.length === 8) {
+        fetchAddress();
+      } else {
+        setHasValidZipCode(false);
+      }
+    }, [register, setValue, zipCode]);
 
-      <AddressFormGrid>
-        <InputMask
-          mask="99999-999"
-          type="text"
-          placeholder="CEP"
-          required
-          {...register('address.zipCode')}
-        />
+    return (
+      <AddressFormContainer
+        {...rest}
+        onSubmit={handleSubmit(handleAddressSubmit)}
+      >
+        <header>
+          <Icon
+            icon={LocationOutline}
+            size={22}
+            color={colors['primary-500']}
+          />
 
-        <input
-          type="text"
-          placeholder="Endereço"
-          disabled={!hasValidZipCode}
-          title={
-            hasValidZipCode
-              ? ''
-              : 'Informe o CEP para preencher automaticamente'
-          }
-          required
-          {...register('address.street')}
-        />
+          <div>
+            <strong>Endereço de entrega</strong>
+            <p>Informe o endereço onde deseja receber o pedido</p>
+          </div>
+        </header>
 
-        <input
-          type="number"
-          pattern="[0-9]+"
-          placeholder="Número"
-          required
-          min={1}
-          {...register('address.number')}
-        />
+        <AddressFormGrid>
+          <InputMask
+            mask="99999-999"
+            type="text"
+            placeholder="CEP"
+            required
+            {...register('address.zipCode')}
+          />
 
-        <input
-          type="text"
-          placeholder="Complemento"
-          {...register('address.complement')}
-        />
+          <input
+            type="text"
+            placeholder="Endereço"
+            disabled={!hasValidZipCode}
+            title={
+              hasValidZipCode
+                ? ''
+                : 'Informe o CEP para preencher automaticamente'
+            }
+            required
+            {...register('address.street')}
+          />
 
-        <input
-          type="text"
-          placeholder="Bairro"
-          disabled={!hasValidZipCode}
-          title={
-            hasValidZipCode
-              ? ''
-              : 'Informe o CEP para preencher automaticamente'
-          }
-          required
-          {...register('address.neighborhood')}
-        />
+          <input
+            type="number"
+            pattern="[0-9]+"
+            placeholder="Número"
+            required
+            min={1}
+            {...register('address.number')}
+          />
 
-        <input
-          type="text"
-          placeholder="Cidade"
-          disabled={!hasValidZipCode}
-          title={
-            hasValidZipCode
-              ? ''
-              : 'Informe o CEP para preencher automaticamente'
-          }
-          required
-          {...register('address.city')}
-        />
+          <input
+            type="text"
+            placeholder="Complemento"
+            {...register('address.complement')}
+          />
 
-        <select
-          placeholder="Estado"
-          disabled={!hasValidZipCode}
-          title={
-            hasValidZipCode
-              ? ''
-              : 'Informe o CEP para preencher automaticamente'
-          }
-          required
-          {...register('address.state')}
-        >
-          {states.map((acronym) => (
-            <option key={acronym} value={acronym}>
-              {acronym}
-            </option>
-          ))}
-        </select>
-      </AddressFormGrid>
+          <input
+            type="text"
+            placeholder="Bairro"
+            disabled={!hasValidZipCode}
+            title={
+              hasValidZipCode
+                ? ''
+                : 'Informe o CEP para preencher automaticamente'
+            }
+            required
+            {...register('address.neighborhood')}
+          />
 
-      {hasSubmitButton && (
-        <AddressFormFooter>
-          <button type="submit">Salvar endereço</button>
-        </AddressFormFooter>
-      )}
-    </AddressFormContainer>
-  );
-};
+          <input
+            type="text"
+            placeholder="Cidade"
+            disabled={!hasValidZipCode}
+            title={
+              hasValidZipCode
+                ? ''
+                : 'Informe o CEP para preencher automaticamente'
+            }
+            required
+            {...register('address.city')}
+          />
+
+          <select
+            placeholder="Estado"
+            disabled={!hasValidZipCode}
+            title={
+              hasValidZipCode
+                ? ''
+                : 'Informe o CEP para preencher automaticamente'
+            }
+            required
+            {...register('address.state')}
+          >
+            {states.map((acronym) => (
+              <option key={acronym} value={acronym}>
+                {acronym}
+              </option>
+            ))}
+          </select>
+        </AddressFormGrid>
+
+        {hasSubmitButton && (
+          <AddressFormFooter>
+            <button type="submit">Salvar endereço</button>
+          </AddressFormFooter>
+        )}
+      </AddressFormContainer>
+    );
+  },
+);

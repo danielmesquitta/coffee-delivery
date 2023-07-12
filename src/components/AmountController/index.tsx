@@ -1,73 +1,74 @@
+import { observer } from 'mobx-react';
 import { useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Add, Remove } from 'react-ionicons';
 import { Icon } from '~/components/Icon';
-import { useCartContext } from '~/contexts/cart';
+import { cartStore } from '~/store/cart';
 import { defaultTheme } from '~/styles/themes/default';
 import { AmountControllerContainer } from './styles';
 import type { AmountControllerProps } from './types';
 
 const { colors } = defaultTheme;
 
-export const AmountController = ({
-  addButtonProps = {},
-  subtractButtonProps = {},
-  index,
-  productId,
-  ...inputProps
-}: AmountControllerProps) => {
-  const { addProduct, subtractProduct } = useCartContext();
+export const AmountController = observer(
+  ({
+    addButtonProps = {},
+    subtractButtonProps = {},
+    index,
+    product,
+    ...inputProps
+  }: AmountControllerProps) => {
+    const { addProduct, subtractProduct, getProductAmount } = cartStore;
 
-  const { register } = useFormContext();
+    const productAmount = getProductAmount(product.id);
 
-  const { update, fields: f } = useFieldArray({
-    name: 'products',
-  });
+    const { register } = useFormContext();
 
-  const fields = f as any as { amount: number }[];
+    const { update } = useFieldArray({
+      name: 'products',
+    });
 
-  const handleAddButtonClick = useCallback(() => {
-    const { amount } = fields[index];
+    const handleAddButtonClick = useCallback(() => {
+      addProduct(product);
 
-    update(index, { amount: amount + 1, id: productId });
+      update(index, { amount: productAmount, id: product.id });
+    }, [addProduct, index, product, productAmount, update]);
 
-    addProduct(productId);
-  }, [addProduct, fields, index, productId, update]);
+    const handleSubtractButtonClick = useCallback(() => {
+      subtractProduct(product.id);
 
-  const handleSubtractButtonClick = useCallback(() => {
-    const { amount } = fields[index];
+      update(index, { amount: productAmount, id: product.id });
+    }, [index, product.id, productAmount, subtractProduct, update]);
 
-    if (amount === 0) return;
+    return (
+      <AmountControllerContainer>
+        <input hidden {...register(`products.${index}.id`)} />
 
-    update(index, { amount: amount - 1, id: productId });
+        <button
+          type="button"
+          onClick={handleSubtractButtonClick}
+          {...subtractButtonProps}
+        >
+          <Icon icon={Remove} size={14} color={colors['secondary-500']} />
+        </button>
 
-    subtractProduct(productId);
-  }, [fields, index, productId, subtractProduct, update]);
+        <input
+          disabled
+          type="number"
+          placeholder="0"
+          value={productAmount}
+          {...inputProps}
+          {...register(`products.${index}.amount`, { valueAsNumber: true })}
+        />
 
-  return (
-    <AmountControllerContainer>
-      <input hidden {...register(`products.${index}.id`)} />
-
-      <button
-        type="button"
-        onClick={handleSubtractButtonClick}
-        {...subtractButtonProps}
-      >
-        <Icon icon={Remove} size={14} color={colors['secondary-500']} />
-      </button>
-
-      <input
-        disabled
-        type="number"
-        placeholder="0"
-        value={fields[index]?.amount}
-        {...inputProps}
-        {...register(`products.${index}.amount`, { valueAsNumber: true })}
-      />
-
-      <button type="button" onClick={handleAddButtonClick} {...addButtonProps}>
-        <Icon icon={Add} size={14} color={colors['secondary-500']} />
-      </button>
-    </AmountControllerContainer>
-  );
-};
+        <button
+          type="button"
+          onClick={handleAddButtonClick}
+          {...addButtonProps}
+        >
+          <Icon icon={Add} size={14} color={colors['secondary-500']} />
+        </button>
+      </AmountControllerContainer>
+    );
+  },
+);

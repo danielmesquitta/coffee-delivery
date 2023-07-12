@@ -3,6 +3,7 @@ import {
   DetailedHTMLProps,
   InputHTMLAttributes,
 } from 'react';
+import { Product } from '~/store/types';
 
 type ButtonProps = DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -15,7 +16,7 @@ type InputProps = DetailedHTMLProps<
 >;
 
 export interface AmountControllerProps extends InputProps {
-  productId: number;
+  product: Product;
 
   index: number;
 

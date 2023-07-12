@@ -1,8 +1,8 @@
-import { CoffeeList } from './components/CoffeeList';
-import { Features } from './components/Features';
+import { CoffeeList } from '~/components/CoffeeList';
+import { Features } from '~/components/Features';
 import { HomeContainer } from './styles';
 
-export const Home = () => {
+const Home = () => {
   return (
     <HomeContainer>
       <Features />
@@ -11,3 +11,5 @@ export const Home = () => {
     </HomeContainer>
   );
 };
+
+export default Home;
